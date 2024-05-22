@@ -49,14 +49,8 @@ async def on_message(message: Message):
         and message.content == "!start"
     ):  # A few safety checks to make sure its not on accident
         await message.delete()  # Delete command message
-        guild = client.get_guild(
-            message.guild.id
-        )  # Fetch current guild (Probably unnessesary)
-        channel = guild.get_channel(
-            message.channel.id
-        )  # Fetch current channel (Probably unnessesary)
         application_commands = (
-            await channel.application_commands()
+            await message.channel.application_commands()
         )  # Fetches all commands in the channel
         for command in application_commands:
             if command.type == ApplicationCommandType.chat_input:
@@ -70,17 +64,17 @@ async def on_message(message: Message):
             auto_work.is_running() and auto_collect.is_running()
         ):  # Checks if they are already running
             auto_work.restart(
-                work, channel, deposit
+                work, message.channel, deposit
             )  # Restarts work if already running
             auto_collect.restart(
-                collect, channel, deposit
+                collect, message.channel, deposit
             )  # Restarts collect if already running
         else:
             auto_work.start(
-                work, channel, deposit
+                work, message.channel, deposit
             )  # Starts work if not running. REMOVE THIS ENTIRE LINE TO DISABLE THE WORK COMMAND
             auto_collect.start(
-                collect, channel, deposit
+                collect, message.channel, deposit
             )  # Starts collect if not running. REMOVE THIS ENTIRE LINE TO DISABLE THE COLLECT COMMAND
     if (
         message.guild.id in guild_ids
